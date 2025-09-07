@@ -1,0 +1,145 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String?
+  image         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  // learning
+  enrollments   Enrollment[]
+  progresses    LessonProgress[]
+  reviews       Review[]
+  bookmarks     Bookmark[]
+}
+
+model Path {
+  id        String  @id @default(cuid())
+  slug      String  @unique
+  title     String
+  summary   String
+  skills    Skill[]
+  lessons   Lesson[]
+  enrollments Enrollment[]   // ← add this line
+}
+
+model Skill {
+  id       String @id @default(cuid())
+  pathId   String
+  name     String
+  summary  String
+  Path     Path   @relation(fields: [pathId], references: [id])
+  // DAG edges
+  outgoing SkillEdge[] @relation("SkillFrom")
+  incoming SkillEdge[] @relation("SkillTo")
+  lessons  Lesson[]
+}
+
+model SkillEdge {
+  id      String @id @default(cuid())
+  fromId  String
+  toId    String
+  from    Skill  @relation("SkillFrom", fields: [fromId], references: [id])
+  to      Skill  @relation("SkillTo", fields: [toId], references: [id])
+}
+
+model Lesson {
+  id        String   @id @default(cuid())
+  pathId    String
+  skillId   String?
+  title     String
+  contentMd String   // markdown content
+  order     Int      // within skill
+  Path      Path     @relation(fields: [pathId], references: [id])
+  Skill     Skill?   @relation(fields: [skillId], references: [id])
+  progresses LessonProgress[]
+  flashcards Flashcard[]
+}
+
+model LessonProgress {
+  id         String   @id @default(cuid())
+  userId     String
+  lessonId   String
+  status     ProgressStatus @default(NOT_STARTED)
+  percent    Int            @default(0)
+  updatedAt  DateTime       @updatedAt
+  User       User   @relation(fields: [userId], references: [id])
+  Lesson     Lesson @relation(fields: [lessonId], references: [id])
+  @@unique([userId, lessonId])
+}
+
+model Enrollment {
+  id        String   @id @default(cuid())
+  userId    String
+  pathId    String
+  createdAt DateTime @default(now())
+  User      User     @relation(fields: [userId], references: [id])
+  Path      Path     @relation(fields: [pathId], references: [id])
+  @@unique([userId, pathId])
+}
+
+enum ProgressStatus { 
+  NOT_STARTED 
+  IN_PROGRESS 
+  DONE 
+}
+
+model Flashcard {
+  id        String   @id @default(cuid())
+  pathId    String?
+  lessonId  String?
+  front     String
+  back      String
+  // SM-2 fields
+  ef        Float    @default(2.5) // easiness factor
+  interval  Int      @default(0)   // days
+  reps      Int      @default(0)   // successful reps in a row
+  Lesson    Lesson?  @relation(fields: [lessonId], references: [id])
+  reviews   Review[]
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  userId     String
+  cardId     String
+  due        DateTime
+  lastGrade  Int?
+  User       User     @relation(fields: [userId], references: [id])
+  Flashcard  Flashcard @relation(fields: [cardId], references: [id])
+  @@index([userId, due])
+}
+
+model Article {
+  id          String   @id @default(cuid())
+  source      String
+  url         String   @unique
+  title       String
+  summary     String?
+  image       String?
+  publishedAt DateTime?
+  // dedupe / ranking
+  hash        String?  @unique
+  tags        String[]
+  createdAt   DateTime @default(now())
+  bookmarks   Bookmark[]
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  userId    String
+  articleId String
+  User      User    @relation(fields: [userId], references: [id])
+  Article   Article @relation(fields: [articleId], references: [id])
+  @@unique([userId, articleId])
+}

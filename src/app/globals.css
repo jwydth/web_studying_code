@@ -1,26 +1,136 @@
-@import "tailwindcss";
+/* src/app/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+/* your custom layers can follow */
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0f172a;
+    --foreground: #f1f5f9;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+/* Dark-mode friendly native selects (works cross-platform) */
+.tw-select {
+  appearance: none; /* hide default arrow */
+  background-color: rgba(15, 23, 42, 0.6); /* slate-900ish */
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  color: #e5e7eb; /* light text for the closed control */
+  padding: 6px 30px 6px 10px;
+  border-radius: 0.5rem; /* rounded-lg */
+  line-height: 1.25rem;
+  font-size: 0.875rem; /* text-sm */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M6 8l4 4 4-4' stroke='%23A3AED0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.55rem center;
+  background-size: 16px;
+}
+
+.tw-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* ring-blue-500/50 */
+  border-color: rgba(59, 130, 246, 0.6);
+}
+
+/* IMPORTANT: when the OS draws the dropdown list, force readable text */
+.tw-select option {
+  color: #0f172a; /* slate-900 for the popup list */
+  background: #ffffff; /* white popup background */
+}
+
+/* prettier slider color */
+.tw-range {
+  accent-color: #60a5fa;
+} /* blue-400 */
+/* globals.css */
+.react-flow__node:hover {
+  filter: drop-shadow(0 0 18px rgba(96, 165, 250, 0.25));
+}
+/* ==== React Flow Controls – Dark theme to match slate UI ==== */
+.rf-controls.react-flow__controls {
+  background: rgba(2, 6, 23, 0.7); /* slate-950/70 */
+  border: 1px solid rgba(148, 163, 184, 0.15); /* slate-400/15 */
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+/* Each button */
+.rf-controls .react-flow__controls-button {
+  background: rgba(15, 23, 42, 0.85); /* slate-900/85 */
+  color: #94a3b8; /* slate-400 (icon color) */
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+/* Last button shouldn’t show the bottom divider */
+.rf-controls .react-flow__controls-button:last-child {
+  border-bottom: none;
+}
+
+/* Hover / active */
+.rf-controls .react-flow__controls-button:hover {
+  background: rgba(30, 41, 59, 0.95); /* slate-800/95 */
+  color: #e2e8f0; /* slate-200 */
+}
+
+/* Make the icons inherit the text color */
+.rf-controls .react-flow__controls-button svg {
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+/* Optional: larger targets + spacing (tweak to taste) */
+.rf-controls .react-flow__controls-button {
+  width: 44px;
+  height: 44px;
+}
+
+/* ==== (Optional) MiniMap to match your theme ==== */
+.react-flow__minimap {
+  background: rgba(2, 6, 23, 0.8) !important; /* slate-950/80 */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+}
+.react-flow__minimap-mask {
+  fill: rgba(2, 6, 23, 0.6) !important; /* darker mask */
+}
+.react-flow__minimap-node {
+  fill: #60a5fa !important; /* sky-400 nodes */
+}
+/* Size tweaks (sm) */
+.rf-controls.rf-controls--sm.react-flow__controls {
+  border-radius: 10px;
+  /* Optional: slightly lighter shadow for a smaller footprint */
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+/* Smaller buttons */
+.rf-controls.rf-controls--sm .react-flow__controls-button {
+  width: 34px; /* was 44px */
+  height: 34px; /* was 44px */
+  padding: 0; /* keep icon centered */
+}
+
+/* Smaller icons */
+.rf-controls.rf-controls--sm .react-flow__controls-button svg {
+  width: 14px; /* was ~18–20px via currentColor */
+  height: 14px;
+}
+
+/* Slightly tighter gaps on narrow screens (optional) */
+@media (max-width: 640px) {
+  .rf-controls.rf-controls--sm .react-flow__controls-button {
+    width: 32px;
+    height: 32px;
+  }
+  .rf-controls.rf-controls--sm .react-flow__controls-button svg {
+    width: 12px;
+    height: 12px;
+  }
 }
