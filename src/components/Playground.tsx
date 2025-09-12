@@ -47,8 +47,9 @@ console.log('Welcome to the coding playground!')`);
       } else {
         setOutput("Code executed successfully (no output)");
       }
-    } catch (e: any) {
-      setOutput(`Error: ${e.message}`);
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      setOutput(`Error: ${message}`);
     } finally {
       setIsRunning(false);
     }

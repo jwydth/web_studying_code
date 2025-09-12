@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
 import Link from "next/link";
 import LivePathGraph from "@/components/LivePathGraph";
+import type { Node, Edge } from "reactflow";
 
 export default async function DsaPathPage() {
   const slug = "dsa-algorithms"; // ← use the exact slug you seeded
@@ -14,6 +15,9 @@ export default async function DsaPathPage() {
     .flatMap((s) => s.lessons)
     .sort((a, b) => a.order - b.order);
 
+  const nodes: Node[] = [];
+  const edges: Edge[] = [];
+
   return (
     <div className="space-y-10">
       <header className="space-y-2">
@@ -21,8 +25,7 @@ export default async function DsaPathPage() {
         <p className="opacity-80">{path.summary}</p>
       </header>
       {/* Live graph */}
-      {/* @ts-expect-error Server -> Client OK */}
-      <LivePathGraph slug={slug} /> {/* ← pass slug, not pathId */}
+      <LivePathGraph slug={slug} initialNodes={nodes} edges={edges} /> {/* ← pass slug, not pathId */}
       {/* Lessons */}
       <section className="space-y-3">
         <h2 className="text-xl font-semibold">Lessons</h2>

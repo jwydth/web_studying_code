@@ -31,7 +31,6 @@ export default async function FrontendPathPreview() {
 
   return (
     <div className="space-y-3">
-      {/* @ts-expect-error Server -> Client */}
       <LivePathGraph
         slug="frontend-foundations"
         initialNodes={nodes}

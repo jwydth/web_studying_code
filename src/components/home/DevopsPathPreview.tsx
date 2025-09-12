@@ -17,11 +17,10 @@ export default async function DevopsPathPreview() {
         DevOps & Cloud Path
       </h2>
       {exists ? (
-        // @ts-expect-error Server -> Client
-        <LivePathGraph slug={slug} />
+        <LivePathGraph slug={slug} initialNodes={[]} edges={[]} />
       ) : (
         <div className="text-sm opacity-70">
-          Path "devops-cloud" not found. Run{" "}
+          Path &quot;devops-cloud&quot; not found. Run{' '}
           <code>npx tsx prisma/seed-devops.ts</code>.
         </div>
       )}

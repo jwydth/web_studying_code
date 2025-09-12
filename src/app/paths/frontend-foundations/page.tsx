@@ -89,7 +89,6 @@ export default async function FrontendPathPage() {
       <section className="space-y-3">
         <h2 className="text-xl font-semibold">Frontend Development Path</h2>
         <div className="rounded-3xl border border-white/10">
-          {/* @ts-expect-error Server -> Client boundary is expected */}
           <LivePathGraph slug={path.slug} initialNodes={nodes} edges={edges} />
         </div>
       </section>

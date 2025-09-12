@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { sm2 } from "@/lib/sm2";
-import { CheckCircle, XCircle, RotateCcw } from "lucide-react";
+import { CheckCircle, RotateCcw } from "lucide-react";
 
 type Card = {
   id: string;
@@ -92,10 +92,10 @@ export default function QuizCard({ card }: { card: Card }) {
               How well did you know this?
             </div>
             <div className="grid grid-cols-3 gap-2">
-              {gradeLabels.map(({ grade, label, color }) => (
+              {gradeLabels.map(({ grade: g, label, color }) => (
                 <button
-                  key={grade}
-                  onClick={() => grade(grade)}
+                  key={g}
+                  onClick={() => grade(g)}
                   className={`px-3 py-2 rounded-lg text-white text-sm font-medium transition-colors ${color}`}
                 >
                   {label}
