@@ -42,7 +42,6 @@ export default async function BackendPathPreview() {
 
   return (
     <div className="space-y-3">
-      {/* @ts-expect-error Server -> Client boundary */}
       <LivePathGraph slug="backend-api" initialNodes={nodes} edges={edges} />
       <div className="text-right">
         <a

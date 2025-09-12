@@ -1,7 +1,6 @@
 import NewsFeed from "@/components/NewsFeed";
 import Playground from "@/components/Playground";
-import QuizCard from "@/components/QuizCard";
-import { Code, BookOpen, TrendingUp, Brain } from "lucide-react";
+import { Code, BookOpen, TrendingUp } from "lucide-react";
 import FrontendPathPreview from "@/components/home/FrontendPathPreview";
 import BackendPathPreview from "@/components/home/BackendPathPreview";
 import FullstackPathPreview from "@/components/home/FullstackPathPreview";
@@ -9,15 +8,6 @@ import DevopsPathPreview from "@/components/home/DevopsPathPreview";
 import DSAPathPreview from "@/components/home/DSAPathPreview";
 
 export default function Home() {
-  const sampleCard = {
-    id: "1",
-    front: "What is the purpose of the `useState` hook in React?",
-    back: "useState adds state to function components: [state, setState].",
-    ef: 2.5,
-    interval: 0,
-    reps: 0,
-  };
-
   return (
     <div className="space-y-16 py-8">
       {/* ...hero & features... */}
@@ -37,7 +27,6 @@ export default function Home() {
           <BookOpen className="w-6 h-6 text-green-400" />
           Frontend Development Path
         </h2>
-        {/* @ts-expect-error Server->Client boundary is fine */}
         <FrontendPathPreview />
       </section>
 
@@ -47,23 +36,19 @@ export default function Home() {
           <BookOpen className="w-6 h-6 text-green-400" />
           Backend API Development Path
         </h2>
-        {/* @ts-expect-error Server->Client boundary is fine */}
         <BackendPathPreview />
       </section>
 
       {/* Full-Stack Path */}
       <section>
-        {/* @ts-expect-error Server → Client */}
         <FullstackPathPreview />
       </section>
 
       <section>
-        {/* @ts-expect-error Server → Client */}
         <DevopsPathPreview />
       </section>
 
       <section className="mt-10 space-y-6">
-        {/* @ts-expect-error Server -> Client */}
         <DSAPathPreview />
       </section>
 

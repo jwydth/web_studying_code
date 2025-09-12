@@ -13,7 +13,7 @@ type Step = {
   line: number; // 1-based line number to highlight
   note?: string; // optional annotation for this step
   delay?: number; // ms delay override for this step
-  state?: Record<string, any>; // variables you want to visualize
+  state?: Record<string, unknown>; // variables you want to visualize
 };
 
 type Example = {
@@ -22,7 +22,7 @@ type Example = {
   code: string; // raw source shown to the user
   explanations?: Record<number, string>; // per-line hover tooltips
   steps: Step[]; // precomputed execution steps
-  renderState?: (s: Record<string, any>) => JSX.Element | null;
+  renderState?: (s: Record<string, unknown>) => JSX.Element | null;
 };
 
 type Props = {
@@ -98,7 +98,13 @@ twoSumSorted(arr, 26);`,
     { line: 8, state: { i: 3, j: 6, sum: 26, result: [3, 6] } },
   ],
   renderState: (s) => (
-    <ArrayViz arr={s.arr} i={s.i} j={s.j} mid={undefined} target={s.target} />
+    <ArrayViz
+      arr={s.arr as number[]}
+      i={s.i as number}
+      j={s.j as number}
+      mid={undefined}
+      target={s.target as number}
+    />
   ),
 };
 
@@ -154,13 +160,13 @@ binarySearch(arr, 9);`,
   ],
   renderState: (s) => (
     <ArrayViz
-      arr={s.arr}
+      arr={s.arr as number[]}
       i={undefined}
       j={undefined}
-      mid={s.mid}
-      target={s.x}
-      lo={s.lo}
-      hi={s.hi}
+      mid={s.mid as number}
+      target={s.x as number}
+      lo={s.lo as number}
+      hi={s.hi as number}
     />
   ),
 };

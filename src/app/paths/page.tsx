@@ -103,7 +103,7 @@ export default function PathsPage() {
               {/* Skills */}
               <div className="space-y-3">
                 <h3 className="text-sm font-medium text-slate-300">
-                  Skills you'll learn:
+                  Skills you&apos;ll learn:
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {path.skills.map((skill) => (

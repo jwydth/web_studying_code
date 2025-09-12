@@ -17,8 +17,7 @@ export default async function FullStackPathPreview() {
         Full-Stack Development Path
       </h2>
       {path ? (
-        // @ts-expect-error Server -> Client
-        <LivePathGraph slug={slug} />
+        <LivePathGraph slug={slug} initialNodes={[]} edges={[]} />
       ) : (
         <div className="text-sm opacity-70">
           Path “{slug}” not found. Seed it first (e.g., run your full-stack seed

@@ -92,13 +92,14 @@ export default function CuteCat({ fur = "#f5c6a5" }: Props) {
     );
 
     // Pupils/glints: move with pointer (small)
-    head.current.children.forEach((c) => {
-      if ((c as any).userData?.pupil) {
-        const m = c as THREE.Mesh;
+    head.current.children.forEach((child) => {
+      const data = child.userData as { pupil?: boolean; glint?: boolean; side?: number };
+      if (data.pupil) {
+        const m = child as THREE.Mesh;
         easing.damp3(
-          m.position as any,
+          m.position,
           new THREE.Vector3(
-            (x ?? 0) * 0.05 + m.userData.side * 0.18,
+            (x ?? 0) * 0.05 + (data.side ?? 0) * 0.18,
             1.28 + (y ?? 0) * 0.04,
             0.78
           ),
@@ -106,12 +107,12 @@ export default function CuteCat({ fur = "#f5c6a5" }: Props) {
           dt
         );
       }
-      if ((c as any).userData?.glint) {
-        const m = c as THREE.Mesh;
+      if (data.glint) {
+        const m = child as THREE.Mesh;
         easing.damp3(
-          m.position as any,
+          m.position,
           new THREE.Vector3(
-            (x ?? 0) * 0.03 + m.userData.side * 0.21,
+            (x ?? 0) * 0.03 + (data.side ?? 0) * 0.21,
             1.31 + (y ?? 0) * 0.02,
             0.86
           ),
@@ -156,9 +157,9 @@ export default function CuteCat({ fur = "#f5c6a5" }: Props) {
     }
     if (mouth.current) {
       const open = meow; // 0..1
-      easing.damp(
+      easing.damp3(
         mouth.current.scale,
-        new THREE.Vector3(1, 1 + open * 0.9, 1) as any,
+        [1, 1 + open * 0.9, 1],
         0.2,
         dt
       );

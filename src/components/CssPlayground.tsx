@@ -3,10 +3,41 @@ import { useState } from "react";
 
 type Mode = "flex" | "grid";
 
+type FlexDirection = "row" | "row-reverse" | "column" | "column-reverse";
+type JustifyContent =
+  | "flex-start"
+  | "center"
+  | "flex-end"
+  | "space-between"
+  | "space-around"
+  | "space-evenly";
+type AlignItems =
+  | "stretch"
+  | "flex-start"
+  | "center"
+  | "flex-end"
+  | "baseline";
+type FlexWrap = "nowrap" | "wrap" | "wrap-reverse";
+
+interface FlexState {
+  direction: FlexDirection;
+  justify: JustifyContent;
+  align: AlignItems;
+  wrap: FlexWrap;
+  gap: number;
+}
+
+interface GridState {
+  cols: number;
+  gap: number;
+  justifyItems: "stretch" | "start" | "center" | "end";
+  alignItems: "stretch" | "start" | "center" | "end";
+}
+
 export default function CssPlayground() {
   const [mode, setMode] = useState<Mode>("flex");
 
-  const [flex, setFlex] = useState({
+  const [flex, setFlex] = useState<FlexState>({
     direction: "row",
     justify: "flex-start",
     align: "stretch",
@@ -14,7 +45,7 @@ export default function CssPlayground() {
     gap: 12,
   });
 
-  const [grid, setGrid] = useState({
+  const [grid, setGrid] = useState<GridState>({
     cols: 3,
     gap: 12,
     justifyItems: "stretch",
@@ -38,10 +69,10 @@ export default function CssPlayground() {
     mode === "flex"
       ? {
           display: "flex",
-          flexDirection: flex.direction as any,
-          justifyContent: flex.justify as any,
-          alignItems: flex.align as any,
-          flexWrap: flex.wrap as any,
+          flexDirection: flex.direction,
+          justifyContent: flex.justify,
+          alignItems: flex.align,
+          flexWrap: flex.wrap,
           gap: flex.gap,
           minHeight: 180,
         }
@@ -49,8 +80,8 @@ export default function CssPlayground() {
           display: "grid",
           gridTemplateColumns: `repeat(${grid.cols}, minmax(0, 1fr))`,
           gap: grid.gap,
-          justifyItems: grid.justifyItems as any,
-          alignItems: grid.alignItems as any,
+          justifyItems: grid.justifyItems,
+          alignItems: grid.alignItems,
           minHeight: 180,
         };
 
@@ -81,14 +112,18 @@ export default function CssPlayground() {
             <Row label="direction">
               <Select
                 value={flex.direction}
-                onChange={(v) => setFlex((s) => ({ ...s, direction: v }))}
+                onChange={(v) =>
+                  setFlex((s) => ({ ...s, direction: v as FlexDirection }))
+                }
                 options={["row", "row-reverse", "column", "column-reverse"]}
               />
             </Row>
             <Row label="justify-content">
               <Select
                 value={flex.justify}
-                onChange={(v) => setFlex((s) => ({ ...s, justify: v }))}
+                onChange={(v) =>
+                  setFlex((s) => ({ ...s, justify: v as JustifyContent }))
+                }
                 options={[
                   "flex-start",
                   "center",
@@ -102,7 +137,9 @@ export default function CssPlayground() {
             <Row label="align-items">
               <Select
                 value={flex.align}
-                onChange={(v) => setFlex((s) => ({ ...s, align: v }))}
+                onChange={(v) =>
+                  setFlex((s) => ({ ...s, align: v as AlignItems }))
+                }
                 options={[
                   "stretch",
                   "flex-start",
@@ -115,7 +152,7 @@ export default function CssPlayground() {
             <Row label="wrap">
               <Select
                 value={flex.wrap}
-                onChange={(v) => setFlex((s) => ({ ...s, wrap: v }))}
+                onChange={(v) => setFlex((s) => ({ ...s, wrap: v as FlexWrap }))}
                 options={["nowrap", "wrap", "wrap-reverse"]}
               />
             </Row>
@@ -163,14 +200,18 @@ export default function CssPlayground() {
             <Row label="justify-items">
               <Select
                 value={grid.justifyItems}
-                onChange={(v) => setGrid((s) => ({ ...s, justifyItems: v }))}
+                onChange={(v) =>
+                  setGrid((s) => ({ ...s, justifyItems: v as GridState["justifyItems"] }))
+                }
                 options={["stretch", "start", "center", "end"]}
               />
             </Row>
             <Row label="align-items">
               <Select
                 value={grid.alignItems}
-                onChange={(v) => setGrid((s) => ({ ...s, alignItems: v }))}
+                onChange={(v) =>
+                  setGrid((s) => ({ ...s, alignItems: v as GridState["alignItems"] }))
+                }
                 options={["stretch", "start", "center", "end"]}
               />
             </Row>

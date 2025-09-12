@@ -64,10 +64,17 @@ console.log('sum(2,3)=', sum(2,3))`,
     iframe.style.display = "none";
     document.body.appendChild(iframe);
 
+    interface JsPlayMessage {
+      __jsplay?: true;
+      out?: string[];
+      res?: { name: string; ok: boolean }[] | null;
+    }
+
     const onMsg = (e: MessageEvent) => {
-      if ((e.data as any)?.__jsplay) {
-        setLogs((e.data as any).out || []);
-        setResults((e.data as any).res || null);
+      const data = e.data as JsPlayMessage;
+      if (data?.__jsplay) {
+        setLogs(data.out || []);
+        setResults(data.res || null);
         cleanup();
       }
     };
