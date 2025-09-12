@@ -40,7 +40,6 @@ export default async function FrontendGraph() {
   return (
     <section className="mt-6">
       <h2 className="text-xl font-semibold mb-3">Frontend Development Path</h2>
-      {/* @ts-expect-error Server Component child */}
       <PathGraph nodesInput={nodes} edgesInput={edges} />
     </section>
   );

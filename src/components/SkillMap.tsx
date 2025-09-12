@@ -9,8 +9,13 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 
+interface SkillNodeData {
+  label: string;
+  completed?: boolean;
+}
+
 const nodeTypes = {
-  skill: ({ data }: { data: any }) => (
+  skill: ({ data }: { data: SkillNodeData }) => (
     <div className="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg shadow-lg">
       <div className="text-sm font-medium text-slate-100">{data.label}</div>
       {data.completed && (
