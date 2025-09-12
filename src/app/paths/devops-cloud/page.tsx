@@ -32,6 +32,7 @@ export default async function DevopsPathPage() {
         {/* Live graph with progress */}
         <LivePathGraph slug={slug} initialNodes={nodes} edges={edges} />
 
+
         {/* Lessons */}
         <section className="space-y-3">
           <h2 className="text-xl font-semibold">Lessons</h2>

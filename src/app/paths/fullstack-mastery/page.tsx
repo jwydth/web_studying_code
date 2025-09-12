@@ -3,7 +3,9 @@ import Link from "next/link";
 import LivePathGraph from "@/components/LivePathGraph";
 import type { Node, Edge } from "reactflow";
 
+
 export const dynamic = "force-dynamic";
+
 
 export default async function FullStackPathPage() {
   try {
@@ -20,6 +22,7 @@ export default async function FullStackPathPage() {
     const nodes: Node[] = [];
     const edges: Edge[] = [];
 
+
     return (
       <div className="space-y-10">
         <header className="space-y-2">
@@ -28,6 +31,7 @@ export default async function FullStackPathPage() {
         </header>
 
         <LivePathGraph slug="fullstack-mastery" initialNodes={nodes} edges={edges} />
+
 
         <section className="space-y-3">
           <h2 className="text-xl font-semibold">Lessons</h2>

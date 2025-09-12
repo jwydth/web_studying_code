@@ -3,7 +3,9 @@ import Link from "next/link";
 import LivePathGraph from "@/components/LivePathGraph";
 import type { Node, Edge } from "reactflow";
 
+
 export const dynamic = "force-dynamic";
+
 
 export default async function DsaPathPage() {
   const slug = "dsa-algorithms"; // ← use the exact slug you seeded
@@ -50,4 +52,5 @@ export default async function DsaPathPage() {
   } catch {
     return <div className="p-6">Unable to load path</div>;
   }
+
 }

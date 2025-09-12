@@ -90,6 +90,7 @@ export default async function FrontendPathPage() {
           <p className="opacity-80">{path.summary}</p>
         </header>
 
+
         {/* Graph section (live-updating on progress) */}
         <section className="space-y-3">
           <h2 className="text-xl font-semibold">Frontend Development Path</h2>
@@ -97,6 +98,7 @@ export default async function FrontendPathPage() {
             <LivePathGraph slug={path.slug} initialNodes={nodes} edges={edges} />
           </div>
         </section>
+
 
         {/* Lessons grid */}
         <section className="space-y-3">

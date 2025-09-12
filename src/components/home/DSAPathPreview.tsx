@@ -63,8 +63,10 @@ export default async function DSAPathPreview() {
             DSA &amp; Algorithms Path
           </h2>
         </div>
+
         <div className="text-sm opacity-70">Unable to load path preview.</div>
       </section>
     );
   }
+
 }

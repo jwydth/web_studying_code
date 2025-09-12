@@ -45,6 +45,7 @@ export default async function FrontendPathPreview() {
             Open Frontend path →
           </a>
         </div>
+
       </div>
     );
   } catch {

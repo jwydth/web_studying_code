@@ -95,6 +95,7 @@ export default async function BackendPathPage() {
           </div>
         </section>
 
+
         {/* Lessons */}
         <section className="space-y-3">
           <h2 className="text-xl font-semibold">Lessons</h2>
