@@ -13,6 +13,9 @@ import ResourceList, { Resource } from "@/components/ResourceList";
 import ProgressChecklist from "@/components/ProgressChecklist";
 import ProgressPill from "@/components/ProgressPill";
 
+// at the top
+import AlgorithmViz from "@/components/AlgorithmViz";
+
 type Props = { params: Promise<{ lessonId: string }> }; // Next requires Promise here in your app
 
 export default async function LessonPage({ params }: Props) {
@@ -694,39 +697,239 @@ export default async function LessonPage({ params }: Props) {
         "List S3 buckets with CLI",
       ],
     },
-
-    "k8s-intro": {
+    // ========= DSA / Algorithms =========
+    // --- DSA / Algorithms (keys must equal Prisma lesson.id) ---
+    "arrays-two-pointers": {
       quiz: [
         {
-          id: "k1",
-          question: "What does a Kubernetes Deployment manage?",
-          choices: [
-            "Raw pods manually",
-            "Stateful databases only",
-            "Replica set of pods and rollout strategy",
-            "A single Node",
-          ],
-          correctIndex: 2,
-          explanation: "Deployments manage ReplicaSets and rollouts of Pods.",
+          id: "a1",
+          question:
+            "Which method returns a shallow copy of a portion of an array?",
+          choices: ["splice", "slice", "map", "reduce"],
+          correctIndex: 1,
+          explanation: "`slice` returns a shallow copy; `splice` mutates.",
         },
       ],
       resources: [
         {
-          title: "Kubernetes Basics",
-          provider: "kubernetes.io",
-          url: "https://kubernetes.io/docs/tutorials/kubernetes-basics/",
-        },
-        {
-          title: "kubectl Cheat Sheet",
-          provider: "kubernetes.io",
-          url: "https://kubernetes.io/docs/reference/kubectl/cheatsheet/",
+          title: "MDN Array",
+          provider: "MDN",
+          url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
         },
       ],
-      extras: null,
+      extras: (
+        <>
+          <h2 className="text-xl font-semibold">Animated walkthrough</h2>
+          <AlgorithmViz exampleId="two-pointers" />
+        </>
+      ),
+      tasks: ["Implement twoSum(nums, target)", "Reverse an array in-place"],
+    },
+
+    "linked-list-intro": {
+      quiz: [
+        {
+          id: "ll1",
+          question: "What does a singly linked list node contain?",
+          choices: [
+            "value only",
+            "next pointer only",
+            "value + next pointer",
+            "index",
+          ],
+          correctIndex: 2,
+          explanation:
+            "Each node stores a value and a pointer to the next node.",
+        },
+      ],
+      resources: [
+        {
+          title: "Linked List",
+          provider: "GeeksforGeeks",
+          url: "https://www.geeksforgeeks.org/data-structures/linked-list/",
+        },
+      ],
+      extras: (
+        <>
+          <h2 className="text-xl font-semibold">LL practice</h2>
+          <JsPlayground />
+        </>
+      ),
       tasks: [
-        "Apply a Deployment with 2 replicas",
-        "Expose it via a Service",
-        "Scale to 3 replicas",
+        "Reverse a singly linked list",
+        "Detect a cycle (Floyd’s algorithm)",
+      ],
+    },
+
+    "graph-bfs-dfs": {
+      quiz: [
+        {
+          id: "g1",
+          question: "Which traversal uses a queue?",
+          choices: ["DFS", "BFS", "Dijkstra", "Bellman-Ford"],
+          correctIndex: 1,
+          explanation: "BFS uses a queue; DFS uses a stack (often recursion).",
+        },
+      ],
+      resources: [
+        {
+          title: "Graphs",
+          provider: "CP-Algorithms",
+          url: "https://cp-algorithms.com/graph/",
+        },
+      ],
+      extras: (
+        <>
+          <h2 className="text-xl font-semibold">Graph practice</h2>
+          <JsPlayground />
+        </>
+      ),
+      tasks: [
+        "BFS shortest path (unweighted)",
+        "Detect cycle in directed graph (DFS)",
+      ],
+    },
+
+    "sorting-intro": {
+      quiz: [
+        {
+          id: "so1",
+          question: "Which sorting algorithm is stable by default?",
+          choices: ["Quick Sort", "Merge Sort", "Heap Sort", "Selection Sort"],
+          correctIndex: 1,
+          explanation: "Merge Sort is stable in its classic implementation.",
+        },
+      ],
+      resources: [
+        {
+          title: "Sorting",
+          provider: "VisuAlgo",
+          url: "https://visualgo.net/en/sorting",
+        },
+      ],
+      extras: (
+        <>
+          <h2 className="text-xl font-semibold">Sort practice</h2>
+          <JsPlayground />
+        </>
+      ),
+      tasks: ["Implement merge sort", "Compare average complexity of 3 sorts"],
+    },
+
+    "tree-traversal": {
+      quiz: [
+        {
+          id: "t1",
+          question: "What is the time complexity to search in a balanced BST?",
+          choices: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
+          correctIndex: 1,
+          explanation: "Balanced BST search is O(log n).",
+        },
+      ],
+      resources: [
+        {
+          title: "Trees",
+          provider: "CP-Algorithms",
+          url: "https://cp-algorithms.com/",
+        },
+      ],
+      extras: (
+        <>
+          <h2 className="text-xl font-semibold">Tree practice</h2>
+          <JsPlayground />
+        </>
+      ),
+      tasks: ["Binary tree BFS (level order)", "BST insert + search"],
+    },
+
+    "dp-intro": {
+      quiz: [
+        {
+          id: "dp1",
+          question: "Dynamic programming typically uses…",
+          choices: [
+            "Randomization",
+            "Memoization/tabulation",
+            "Divide-only",
+            "Greedy-in-all-cases",
+          ],
+          correctIndex: 1,
+          explanation:
+            "DP stores subproblem results (memoization) or builds tables (tabulation).",
+        },
+      ],
+      resources: [
+        {
+          title: "DP Patterns",
+          provider: "LeetCode Discuss",
+          url: "https://leetcode.com/discuss/general-discussion/458695/dynamic-programming-patterns",
+        },
+      ],
+      extras: (
+        <>
+          <h2 className="text-xl font-semibold">DP practice</h2>
+          <JsPlayground />
+        </>
+      ),
+      tasks: ["Climbing stairs (memo & tab)", "0/1 Knapsack (tabulation)"],
+    },
+
+    "big-o-intro": {
+      quiz: [
+        {
+          id: "bo1",
+          question: "Which growth is faster as n→∞?",
+          choices: ["O(n log n)", "O(n)", "O(log n)", "O(n^2)"],
+          correctIndex: 3,
+          explanation: "Among the choices, O(n^2) grows the fastest.",
+        },
+      ],
+      resources: [
+        {
+          title: "Big-O Cheatsheet",
+          provider: "bigocheatsheet.com",
+          url: "https://www.bigocheatsheet.com/",
+        },
+      ],
+      extras: (
+        <>
+          <h2 className="text-xl font-semibold">Complexity warm-ups</h2>
+          <JsPlayground />
+        </>
+      ),
+      tasks: [
+        "Estimate complexities for common loops",
+        "Compare two solutions asymptotically",
+      ],
+    },
+
+    // add if present in DB
+    "searching-intro": {
+      quiz: [
+        {
+          id: "se1",
+          question: "Binary search requires…",
+          choices: ["Sorted array", "Linked list", "Hash map", "Heap"],
+          correctIndex: 0,
+          explanation: "Binary search works on sorted sequences.",
+        },
+      ],
+      resources: [
+        {
+          title: "Binary Search",
+          provider: "Khan Academy",
+          url: "https://www.khanacademy.org/computing/computer-science/algorithms",
+        },
+      ],
+      extras: (
+        <>
+          <h2 className="text-xl font-semibold">Animated walkthrough</h2>
+          <AlgorithmViz exampleId="binary-search" />
+        </>
+      ),
+      tasks: [
+        "Implement binarySearch(nums, x)",
+        "Find first and last position of x",
       ],
     },
   };

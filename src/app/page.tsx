@@ -6,6 +6,7 @@ import FrontendPathPreview from "@/components/home/FrontendPathPreview";
 import BackendPathPreview from "@/components/home/BackendPathPreview";
 import FullstackPathPreview from "@/components/home/FullstackPathPreview";
 import DevopsPathPreview from "@/components/home/DevopsPathPreview";
+import DSAPathPreview from "@/components/home/DSAPathPreview";
 
 export default function Home() {
   const sampleCard = {
@@ -59,6 +60,11 @@ export default function Home() {
       <section>
         {/* @ts-expect-error Server → Client */}
         <DevopsPathPreview />
+      </section>
+
+      <section className="mt-10 space-y-6">
+        {/* @ts-expect-error Server -> Client */}
+        <DSAPathPreview />
       </section>
 
       {/* Code playground below, larger card */}
