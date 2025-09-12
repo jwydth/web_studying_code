@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
 import Link from "next/link";
 import LivePathGraph from "@/components/LivePathGraph";
+import type { Node, Edge } from "reactflow";
 
 export default async function FullStackPathPage() {
   const path = await prisma.path.findUnique({
@@ -13,6 +14,9 @@ export default async function FullStackPathPage() {
     .flatMap((s) => s.lessons)
     .sort((a, b) => a.order - b.order);
 
+  const nodes: Node[] = [];
+  const edges: Edge[] = [];
+
   return (
     <div className="space-y-10">
       <header className="space-y-2">
@@ -20,8 +24,7 @@ export default async function FullStackPathPage() {
         <p className="opacity-80">{path.summary}</p>
       </header>
 
-      {/* @ts-expect-error Server -> Client bridge */}
-      <LivePathGraph slug="fullstack-mastery" />
+      <LivePathGraph slug="fullstack-mastery" initialNodes={nodes} edges={edges} />
 
       <section className="space-y-3">
         <h2 className="text-xl font-semibold">Lessons</h2>

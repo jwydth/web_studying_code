@@ -40,8 +40,7 @@ export default async function DSAPathPreview() {
 
       {/* Full-width graph container (same look as DevOps) */}
       <div className="rounded-3xl border border-white/10 bg-white/5">
-        {/* @ts-expect-error Server -> Client OK */}
-        <LivePathGraph slug={slug} />
+        <LivePathGraph slug={slug} initialNodes={[]} edges={[]} />
       </div>
 
       {!exists && (

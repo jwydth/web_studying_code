@@ -2,13 +2,20 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { ensureUserIdInRoute } from "@/lib/user";
+import { ProgressStatus } from "@prisma/client";
+
+interface ProgressBody {
+  lessonId?: string;
+  percent?: number;
+  status?: ProgressStatus;
+}
 
 export async function POST(req: Request) {
   const userId = await ensureUserIdInRoute(); // sets uid cookie if missing
 
-  let body: any = {};
+  let body: ProgressBody = {};
   try {
-    body = await req.json();
+    body = (await req.json()) as ProgressBody;
   } catch {
     // ignore malformed JSON; we'll validate below
   }
@@ -20,7 +27,12 @@ export async function POST(req: Request) {
 
   const pct = Math.max(0, Math.min(100, Math.round(Number(percent ?? 0))));
   const st =
-    status ?? (pct >= 100 ? "DONE" : pct > 0 ? "IN_PROGRESS" : "NOT_STARTED");
+    status ??
+    (pct >= 100
+      ? ProgressStatus.DONE
+      : pct > 0
+        ? ProgressStatus.IN_PROGRESS
+        : ProgressStatus.NOT_STARTED);
 
   const progress = await prisma.lessonProgress.upsert({
     where: { userId_lessonId: { userId, lessonId } },

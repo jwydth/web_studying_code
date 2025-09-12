@@ -86,7 +86,6 @@ export default async function BackendPathPage() {
       <section className="space-y-3">
         <h2 className="text-xl font-semibold">Backend Path</h2>
         <div className="rounded-3xl border border-white/10">
-          {/* @ts-expect-error Server→Client boundary */}
           <LivePathGraph slug={path.slug} initialNodes={nodes} edges={edges} />
         </div>
       </section>

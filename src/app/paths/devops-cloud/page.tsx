@@ -2,6 +2,9 @@
 import { prisma } from "@/lib/db";
 import Link from "next/link";
 import LivePathGraph from "@/components/LivePathGraph";
+import type { Node, Edge } from "reactflow";
+
+export const dynamic = "force-dynamic";
 
 export default async function DevopsPathPage() {
   const slug = "devops-cloud";
@@ -15,6 +18,9 @@ export default async function DevopsPathPage() {
     .flatMap((s) => s.lessons)
     .sort((a, b) => a.order - b.order);
 
+  const nodes: Node[] = [];
+  const edges: Edge[] = [];
+
   return (
     <div className="space-y-10">
       <header className="space-y-2">
@@ -23,8 +29,7 @@ export default async function DevopsPathPage() {
       </header>
 
       {/* Live graph with progress */}
-      {/* @ts-expect-error Server -> Client */}
-      <LivePathGraph slug={slug} />
+      <LivePathGraph slug={slug} initialNodes={nodes} edges={edges} />
 
       {/* Lessons */}
       <section className="space-y-3">

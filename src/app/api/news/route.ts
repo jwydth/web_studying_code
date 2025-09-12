@@ -1,6 +1,14 @@
 import { NextResponse } from 'next/server'
 import Parser from 'rss-parser'
 
+interface FeedItem {
+  source: string
+  title: string
+  url: string
+  publishedAt?: string
+  summary?: string
+}
+
 const parser = new Parser()
 
 const FEEDS = [
@@ -28,13 +36,13 @@ const FEEDS = [
 
 export async function GET() {
   try {
-    const items: any[] = []
+    const items: FeedItem[] = []
 
     await Promise.all(
       FEEDS.map(async (feed) => {
         try {
           const parsed = await parser.parseURL(feed.url)
-          const feedItems = parsed.items.slice(0, 10).map((item: any) => ({
+          const feedItems = parsed.items.slice(0, 10).map((item) => ({
             source: feed.name,
             title: item.title || 'Untitled',
             url: item.link || '#',
