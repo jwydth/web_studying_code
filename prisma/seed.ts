@@ -1,35 +1,43 @@
-import { spawn } from 'child_process'
+// prisma/seed.ts
+import { PrismaClient } from "@prisma/client";
 
-const seedFiles = [
-  'prisma/seed-frontend.ts',
-  'prisma/seed-backend.ts',
-  'prisma/seed-devops.ts',
-  'prisma/seed-fullstack.ts',
-  'prisma/seed-dsa.ts',
-]
+// Import the default functions you exported earlier
+import seedFrontend from "./seed-frontend";
+import seedBackend from "./seed-backend";
+import seedDevops from "./seed-devops";
+import seedFullstack from "./seed-fullstack";
+import seedDsa from "./seed-dsa";
 
-function runSeed(file: string) {
-  return new Promise<void>((resolve, reject) => {
-    const proc = spawn('tsx', [file], { stdio: 'inherit' })
-    proc.on('close', (code) => {
-      if (code !== 0) {
-        reject(new Error(`Seeding failed for ${file}`))
-      } else {
-        resolve()
-      }
-    })
-  })
-}
+type Runner = { name: string; run: (p: PrismaClient) => Promise<void> };
+
+const runners: Runner[] = [
+  { name: "frontend", run: seedFrontend },
+  { name: "backend", run: seedBackend },
+  { name: "devops", run: seedDevops },
+  { name: "fullstack", run: seedFullstack },
+  { name: "dsa", run: seedDsa },
+];
 
 async function main() {
-  for (const file of seedFiles) {
-    console.log(`\n▶ Running ${file}`)
-    await runSeed(file)
+  const prisma = new PrismaClient();
+  const only = new Set(process.argv.slice(2).map(s => s.toLowerCase()).filter(Boolean));
+  const tStart = Date.now();
+
+  try {
+    for (const r of runners) {
+      if (only.size && !only.has(r.name)) continue;
+      const t0 = Date.now();
+      console.log(`\n▶ Seeding ${r.name}…`);
+      await r.run(prisma);
+      console.log(`✅ ${r.name} done in ${((Date.now() - t0) / 1000).toFixed(1)}s`);
+    }
+    console.log(`\n🎉 All seeds completed in ${((Date.now() - tStart) / 1000).toFixed(1)}s`);
+  } catch (err) {
+    console.error("\n❌ Error seeding database:", err);
+    process.exitCode = 1;
+  } finally {
+    await prisma.$disconnect();
   }
-  console.log('\n✅ All seed files executed successfully')
 }
 
-main().catch((err) => {
-  console.error('\n❌ Error seeding database:', err)
-  process.exit(1)
-})
+main();

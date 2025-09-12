@@ -1,8 +1,14 @@
 // prisma/seed-backend.ts
 import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { pathToFileURL } from "node:url";
+import path from "node:path";
 
-async function main() {
+/**
+ * Exported seeder. Call from your orchestrator:
+ *   import seedBackend from "./seed-backend";
+ *   await seedBackend(prisma);
+ */
+export default async function seedBackend(prisma: PrismaClient) {
   console.log("🌱 Seeding Backend API Development...");
 
   const backend = await prisma.path.upsert({
@@ -223,11 +229,22 @@ app.get('/me', (req, res) => {
   console.log("✅ Backend path seeded.");
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+/**
+ * Allow running this file directly:
+ *   tsx prisma/seed-backend.ts
+ */
+const isDirect =
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(path.resolve(process.argv[1]!)).href;
+
+if (isDirect) {
+  const prisma = new PrismaClient();
+  seedBackend(prisma)
+    .catch((e) => {
+      console.error(e);
+      process.exit(1);
+    })
+    .finally(async () => {
+      await prisma.$disconnect();
+    });
+}

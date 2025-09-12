@@ -1,11 +1,17 @@
+// prisma/seed-dsa.ts
 import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { pathToFileURL } from "node:url";
+import path from "node:path";
 
-async function main() {
+/** Importable seeder:
+ *   import seedDsa from "./seed-dsa";
+ *   await seedDsa(prisma);
+ */
+export default async function seedDsa(prisma: PrismaClient) {
   console.log("🌱 Seeding DSA & Algorithms...");
 
   // 1) Path
-  const path = await prisma.path.upsert({
+  const pathRow = await prisma.path.upsert({
     where: { slug: "dsa-algorithms" },
     update: {},
     create: {
@@ -16,7 +22,7 @@ async function main() {
     },
   });
 
-  // 2) Skills (use readable IDs so edges are easy)
+  // 2) Skills
   const skills = [
     { id: "complexity", name: "Big-O & Complexity", summary: "Analyze time & space." },
     { id: "arrays-strings", name: "Arrays & Strings", summary: "Sliding window, two-pointers." },
@@ -32,13 +38,13 @@ async function main() {
     { id: "greedy", name: "Greedy", summary: "Intervals, exchange arguments." },
     { id: "backtracking", name: "Backtracking", summary: "Subsets, permutations, N-queens." },
     { id: "practice", name: "Interview Practice", summary: "Mixed problems & strategies." },
-  ];
+  ] as const;
 
   for (const s of skills) {
     await prisma.skill.upsert({
       where: { id: s.id },
       update: {},
-      create: { id: s.id, pathId: path.id, name: s.name, summary: s.summary },
+      create: { id: s.id, pathId: pathRow.id, name: s.name, summary: s.summary },
     });
   }
 
@@ -70,7 +76,7 @@ async function main() {
     });
   }
 
-  // 4) A handful of starter lessons (you can add more later)
+  // 4) Starter lessons
   type L = { id: string; title: string; order: number; skillId: string; md: string };
   const lessons: L[] = [
     {
@@ -207,7 +213,7 @@ function fib(n:number, memo:Record<number,number> = {}) {
         title: L.title,
         order: L.order,
         skillId: L.skillId,
-        pathId: path.id,
+        pathId: pathRow.id,
         contentMd: L.md,
       },
     });
@@ -216,9 +222,17 @@ function fib(n:number, memo:Record<number,number> = {}) {
   console.log("✅ DSA & Algorithms seeded.");
 }
 
-main()
-  .catch((e) => {
-    console.error("❌ Seed error:", e);
-    process.exit(1);
-  })
-  .finally(async () => prisma.$disconnect());
+/** Allow running this file directly: `tsx prisma/seed-dsa.ts` */
+const isDirect =
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(path.resolve(process.argv[1]!)).href;
+
+if (isDirect) {
+  const prisma = new PrismaClient();
+  seedDsa(prisma)
+    .catch((e) => {
+      console.error("❌ Seed error:", e);
+      process.exit(1);
+    })
+    .finally(async () => prisma.$disconnect());
+}

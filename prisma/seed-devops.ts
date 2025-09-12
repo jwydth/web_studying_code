@@ -1,10 +1,16 @@
 // prisma/seed-devops.ts
 import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { pathToFileURL } from "node:url";
+import path from "node:path";
 
-async function main() {
+/** Importable seeder:
+ *   import seedDevops from "./seed-devops";
+ *   await seedDevops(prisma);
+ */
+export default async function seedDevops(prisma: PrismaClient) {
   console.log("🌱 Seeding DevOps & Cloud path...");
-  const path = await prisma.path.upsert({
+
+  const pathRow = await prisma.path.upsert({
     where: { slug: "devops-cloud" },
     update: {},
     create: {
@@ -20,43 +26,46 @@ async function main() {
     update: {},
     create: {
       id: "docker",
-      pathId: path.id,
+      pathId: pathRow.id,
       name: "Docker",
       summary: "Containerization fundamentals.",
     },
   });
+
   const cicd = await prisma.skill.upsert({
     where: { id: "cicd" },
     update: {},
     create: {
       id: "cicd",
-      pathId: path.id,
+      pathId: pathRow.id,
       name: "CI/CD",
       summary: "Automated build, test, and deploy.",
     },
   });
+
   const aws = await prisma.skill.upsert({
     where: { id: "aws" },
     update: {},
     create: {
       id: "aws",
-      pathId: path.id,
+      pathId: pathRow.id,
       name: "AWS",
       summary: "Core AWS services & IAM.",
     },
   });
+
   const k8s = await prisma.skill.upsert({
     where: { id: "kubernetes" },
     update: {},
     create: {
       id: "kubernetes",
-      pathId: path.id,
+      pathId: pathRow.id,
       name: "Kubernetes",
       summary: "Orchestration with k8s.",
     },
   });
 
-  // Edges (DAG)
+  // DAG edges
   await prisma.skillEdge.upsert({
     where: { id: "docker-to-cicd" },
     update: {},
@@ -177,22 +186,30 @@ spec:
 `,
       order: 1,
     },
-  ];
+  ] as const;
 
   for (const l of lessons) {
     await prisma.lesson.upsert({
       where: { id: l.id },
       update: {},
-      create: { ...l, pathId: path.id },
+      create: { ...l, pathId: pathRow.id },
     });
   }
 
   console.log("✅ DevOps path seeded.");
 }
 
-main()
-  .catch((e) => {
-    console.error("❌ Seed error:", e);
-    process.exit(1);
-  })
-  .finally(async () => prisma.$disconnect());
+/** Allow running this file directly: `tsx prisma/seed-devops.ts` */
+const isDirect =
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(path.resolve(process.argv[1]!)).href;
+
+if (isDirect) {
+  const prisma = new PrismaClient();
+  seedDevops(prisma)
+    .catch((e) => {
+      console.error("❌ Seed error:", e);
+      process.exit(1);
+    })
+    .finally(async () => prisma.$disconnect());
+}

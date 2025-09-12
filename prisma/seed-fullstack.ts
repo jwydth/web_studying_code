@@ -1,12 +1,17 @@
 // prisma/seed-fullstack.ts
 import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { pathToFileURL } from "node:url";
+import nodePath from "node:path";
 
-async function main() {
+/** Importable seeder:
+ *   import seedFullstack from "./seed-fullstack";
+ *   await seedFullstack(prisma);
+ */
+export default async function seedFullstack(prisma: PrismaClient) {
   console.log("🌱 Seeding: Full-Stack Mastery…");
 
   // 1) Path
-  const path = await prisma.path.upsert({
+  const pathRow = await prisma.path.upsert({
     where: { slug: "fullstack-mastery" },
     update: {},
     create: {
@@ -17,15 +22,42 @@ async function main() {
     },
   });
 
-  // Helper to make upserts easier
+  // Helpers
   const upsertSkill = (id: string, name: string, summary: string) =>
     prisma.skill.upsert({
       where: { id },
       update: {},
-      create: { id, pathId: path.id, name, summary },
+      create: { id, pathId: pathRow.id, name, summary },
     });
 
-  // 2) Skills (IDs are fixed strings to allow repeatable upserts)
+  const upsertEdge = (id: string, fromId: string, toId: string) =>
+    prisma.skillEdge.upsert({
+      where: { id },
+      update: {},
+      create: { id, fromId, toId },
+    });
+
+  const upsertLesson = (
+    id: string,
+    skillId: string,
+    title: string,
+    order: number,
+    md: string
+  ) =>
+    prisma.lesson.upsert({
+      where: { id },
+      update: {},
+      create: {
+        id,
+        pathId: pathRow.id,
+        skillId,
+        title,
+        order,
+        contentMd: md,
+      },
+    });
+
+  // 2) Skills
   const tsSkill = await upsertSkill(
     "fs-ts",
     "TypeScript",
@@ -47,39 +79,12 @@ async function main() {
     "Fast, global deployments for your full-stack apps."
   );
 
-  // 3) Edges (TypeScript -> Next.js -> Prisma -> Vercel)
-  const upsertEdge = (id: string, fromId: string, toId: string) =>
-    prisma.skillEdge.upsert({
-      where: { id },
-      update: {},
-      create: { id, fromId, toId },
-    });
-
+  // 3) Edges (TS -> Next -> Prisma -> Vercel)
   await upsertEdge("fs-edge-ts-next", tsSkill.id, nextSkill.id);
   await upsertEdge("fs-edge-next-prisma", nextSkill.id, prismaSkill.id);
   await upsertEdge("fs-edge-prisma-vercel", prismaSkill.id, vercelSkill.id);
 
-  // 4) Lessons (one per skill is enough for progress to compute)
-  const upsertLesson = (
-    id: string,
-    skillId: string,
-    title: string,
-    order: number,
-    md: string
-  ) =>
-    prisma.lesson.upsert({
-      where: { id },
-      update: {},
-      create: {
-        id,
-        pathId: path.id,
-        skillId,
-        title,
-        order,
-        contentMd: md,
-      },
-    });
-
+  // 4) Lessons
   await upsertLesson(
     "fs-ts-intro",
     tsSkill.id,
@@ -140,11 +145,19 @@ function greet(u: User) { return "Hi " + u.name }
   console.log("✅ Full-Stack Mastery seeded.");
 }
 
-main()
-  .catch((e) => {
-    console.error("❌ Seed error:", e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+/** Allow running this file directly: `tsx prisma/seed-fullstack.ts` */
+const isDirect =
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(nodePath.resolve(process.argv[1]!)).href;
+
+if (isDirect) {
+  const prisma = new PrismaClient();
+  seedFullstack(prisma)
+    .catch((e) => {
+      console.error("❌ Seed error:", e);
+      process.exit(1);
+    })
+    .finally(async () => {
+      await prisma.$disconnect();
+    });
+}
