@@ -3,6 +3,7 @@ import LivePathGraph from "@/components/LivePathGraph";
 import Link from "next/link";
 // If your lucide version doesn't have Binary, swap to Sigma or Braces.
 import { Binary } from "lucide-react";
+import type { Node, Edge } from "reactflow";
 
 export default async function DSAPathPreview() {
   const slug = "dsa-algorithms";
@@ -51,6 +52,23 @@ export default async function DSAPathPreview() {
       </section>
     );
   } catch {
+    const fallbackNodes: Node[] = [
+      {
+        id: "start",
+        type: "skill",
+        data: { label: "Sample Intro", href: `/paths/${slug}` },
+        position: { x: 0, y: 0 },
+      },
+      {
+        id: "next",
+        type: "skill",
+        data: { label: "Sample Next Step", href: `/paths/${slug}` },
+        position: { x: 0, y: 0 },
+      },
+    ];
+    const fallbackEdges: Edge[] = [
+      { id: "start-next", source: "start", target: "next" },
+    ];
     return (
       <section className="w-full space-y-4">
         <div className="flex items-center gap-3">
@@ -64,7 +82,16 @@ export default async function DSAPathPreview() {
           </h2>
         </div>
 
-        <div className="text-sm opacity-70">Unable to load path preview.</div>
+        <div className="rounded-3xl border border-white/10 bg-white/5">
+          <LivePathGraph
+            slug={slug}
+            initialNodes={fallbackNodes}
+            edges={fallbackEdges}
+          />
+        </div>
+        <div className="text-center text-sm opacity-70">
+          Showing sample data. Connect a database to see the full path.
+        </div>
       </section>
     );
   }
